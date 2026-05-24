@@ -38,20 +38,20 @@
             object-fit: cover;
             display: block;
         }
-        /* تموضع الاسم بدقة في النصف الأبيض الأيسر تحت "كل عام وأنتم بخير" */
+        /* تعديل الاسم ليكون خطاً عادياً (Normal) وليس عريضاً (Bold) */
         .dynamic-name {
             position: absolute;
             bottom: 12%; 
             left: 21%;  
             transform: translateX(-50%);
             font-size: 22px;
-            font-weight: bold;
+            font-weight: normal; /* تم تغييرها من bold إلى normal لخط ناعم وانسيابي */
             color: #1e4640; 
             text-align: center;
             white-space: nowrap;
             width: 35%;
         }
-        /* صندوق الإدخال والتحميل العائم أسفل الشاشة مثل المثال تماماً */
+        /* صندوق الإدخال والتحميل العائم أسفل الشاشة */
         .floating-controls {
             position: fixed;
             bottom: 25px;
@@ -61,7 +61,7 @@
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(8px);
             padding: 12px 20px;
-            border-radius: 50px; /* تصميم بيضاوي عصري */
+            border-radius: 50px;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -103,7 +103,7 @@
             background-color: #ccc;
             cursor: not-allowed;
         }
-        /* تحسينات لضمان التوافق التام مع شاشات الجوال الصغيرة */
+        /* تحسينات الشاشات الصغيرة */
         @media (max-width: 480px) {
             .floating-controls {
                 flex-direction: column;
@@ -115,7 +115,7 @@
                 width: 100%;
             }
             .dynamic-name {
-                font-size: 18px; /* تصغير طفيف للخط على الجوال لمنع خروج النص */
+                font-size: 18px;
             }
         }
     </style>
@@ -138,7 +138,6 @@
         const downloadBtn = document.getElementById('downloadBtn');
         const greetingCard = document.getElementById('greetingCard');
 
-        // تحديث الاسم ديناميكياً فورياً أثناء الكتابة
         nameInput.addEventListener('input', (e) => {
             if(e.target.value.trim() !== "") {
                 userName.textContent = e.target.value;
@@ -147,7 +146,6 @@
             }
         });
 
-        // قراءة الاسم من الرابط تلقائياً في حال تمريره (مثال: ?name=محمد)
         const urlParams = new URLSearchParams(window.location.search);
         const nameParam = urlParams.get('name');
         if (nameParam) {
@@ -155,7 +153,6 @@
             nameInput.value = nameParam;
         }
 
-        // معالجة توليد الصورة وحفظها تلقائياً
         downloadBtn.addEventListener('click', () => {
             const originalBtnText = downloadBtn.textContent;
             downloadBtn.textContent = "جاري الحفظ...";
@@ -164,23 +161,21 @@
             const currentName = nameInput.value.trim() || "تهنئة";
             const fileName = `LocalEyes_${currentName}.png`;
 
-            // التقاط الكارت فقط وتصديره كصورة حادة ونقية
             html2canvas(greetingCard, {
                 useCORS: true, 
-                scale: 2, // دقة مضاعفة وممتازة للشاشات العالية العرض (Retina Display)
+                scale: 2, 
                 logging: false,
-                backgroundColor: null // تصدير بخلفية شفافة للأركان إن وجدت
+                backgroundColor: null 
             }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = fileName;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
 
-                // إعادة الزر لوضعه الطبيعي
                 downloadBtn.textContent = originalBtnText;
                 downloadBtn.disabled = false;
             }).catch(err => {
-                alert("حدث خطأ أثناء إعداد الصورة، يرجى المحاولة مرة أخرى أو استخدام لقطة شاشة.");
+                alert("حدث خطأ أثناء إعداد الصورة، يرجى المحاولة مرة أخرى.");
                 downloadBtn.textContent = originalBtnText;
                 downloadBtn.disabled = false;
             });
